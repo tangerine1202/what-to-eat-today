@@ -8,12 +8,14 @@
     "node": "14.x"
   },
   "scripts": {
+    "lint": "npx standard -fix",
     "start": "npx standard --fix && node ."
   },
   "dependencies": {
     "@line/bot-sdk": "^7.4.0",
     "dotenv": "^10.0.0",
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "mongoose": "^6.0.13"
   },
   "devDependencies": {
     "standard": "^16.0.4"

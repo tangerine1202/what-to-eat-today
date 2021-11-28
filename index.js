@@ -2,26 +2,21 @@
 
 import line from '@line/bot-sdk'
 import express from 'express'
-import dotenv from 'dotenv'
-
-dotenv.config()
-
-// create LINE SDK config from env variables
-const config = {
-  channelAccessToken: process.env.CHANNEL_ACCESS_TOKEN,
-  channelSecret: process.env.CHANNEL_SECRET
-}
+import config from './config/config.js'
+import connectMongoDB from './config/mongo.js'
 
 // create LINE SDK client
-const client = new line.Client(config)
+const client = new line.Client(config.line)
 
-// create Express app
-// about Express itself: https://expressjs.com/
+connectMongoDB()
+
 const app = express()
 
 // register a webhook handler with middleware
 // about the middleware, please refer to doc
-app.post('/callback', line.middleware(config), (req, res) => {
+app.use(line.middleware(config.line))
+
+app.post('/callback', (req, res) => {
   Promise
     .all(req.body.events.map(handleEvent))
     .then((result) => res.json(result))
@@ -33,20 +28,22 @@ app.post('/callback', line.middleware(config), (req, res) => {
 
 // event handler
 function handleEvent (event) {
-  if (event.type !== 'message' || event.message.type !== 'text') {
-    // ignore non-text-message event
-    return Promise.resolve(null)
+  const eventType = event.type
+
+  switch (eventType) {
+    case 'follow':
+      break
+    case 'message':
+      return client.replyMessage(event.replyToken, { type: 'text', text: event.message.text })
+    case 'postback':
+      break
+    default:
+      console.log(`Unregistered event type: ${eventType}`)
+      return Promise.resolve(null)
   }
-
-  // create a echoing text message
-  const echo = { type: 'text', text: event.message.text }
-
-  // use reply API
-  return client.replyMessage(event.replyToken, echo)
 }
 
 // listen on port
-const port = process.env.PORT || 3000
-app.listen(port, () => {
-  console.log(`listening on ${port}`)
+app.listen(config.app.port, () => {
+  console.log(`listening on ${config.app.port}`)
 })

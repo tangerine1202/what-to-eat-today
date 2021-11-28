@@ -1,0 +1,17 @@
+version: '3.1'
+
+services:
+  mongo:
+    container_name: what-to-eat-today-mongo
+    image: mongo:4.4
+    restart: on-failure
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    volumes:
+      - /data/db
+    command: mongod
+volumes:
+  data-volume:
