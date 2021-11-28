@@ -4,9 +4,7 @@ import line from '@line/bot-sdk'
 import express from 'express'
 import config from './config/config.js'
 import connectMongoDB from './config/mongo.js'
-
-// create LINE SDK client
-const client = new line.Client(config.line)
+import controller from './controller/index.js'
 
 connectMongoDB()
 
@@ -32,11 +30,11 @@ function handleEvent (event) {
 
   switch (eventType) {
     case 'follow':
-      break
+      return controller.follow(event)
     case 'message':
-      return client.replyMessage(event.replyToken, { type: 'text', text: event.message.text })
+      return controller.message(event)
     case 'postback':
-      break
+      return Promise.resolve(null)
     default:
       console.log(`Unregistered event type: ${eventType}`)
       return Promise.resolve(null)
