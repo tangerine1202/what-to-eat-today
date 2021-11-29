@@ -5,7 +5,7 @@ export default async function (event) {
   const { userId } = event.source
   // catch get profile
   const { displayName, pictureUrl } = await client.getProfile(userId)
-  const defaultCoordinates = [25.033860138538692, 121.5645717456342]
+  const defaultCoordinates = [121.5645717456342, 25.033860138538692]
   const defaultAddress = '110台北市信義區信義路五段7號'
   const user = {
     user_id: userId,
@@ -13,6 +13,7 @@ export default async function (event) {
     picture_url: pictureUrl,
     address: defaultAddress,
     location: {
+      type: 'Point',
       coordinates: defaultCoordinates
     }
   }
