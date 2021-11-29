@@ -1,10 +1,20 @@
 import client from '../config/lineClient.js'
+import service from '../service/index.js'
 
 export default function (event) {
-  const { message } = event
-  const { type, text } = message
+  const { message, source, replyToken } = event
+  const { userId } = source
+  const { type } = message
 
-  if (type !== 'text') return Promise.resolve(null)
-
-  return client.replyMessage(event.replyToken, { type: 'text', text })
+  try {
+    if (type === 'text') {
+      const { text } = message
+      const res = service.echo(replyToken, { text })
+      return res
+    } else {
+      return Promise.resolve(null)
+    }
+  } catch (err) {
+    return client.replyMessage(replyToken, { type: 'text', text: err.message })
+  }
 }
