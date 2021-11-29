@@ -1,6 +1,7 @@
 import client from '../config/lineClient.js'
 import service from '../service/index.js'
 import ErrorRes from '../lib/errorRes.js'
+import keywords from '../lib/keywords.js'
 
 export default function (event) {
   const { message, source, replyToken } = event
@@ -10,8 +11,32 @@ export default function (event) {
   try {
     if (type === 'text') {
       const { text } = message
-      const res = service.echo(replyToken, { text })
-      return res
+      const terms = text.trim().split(' ')
+      const prefix = terms[0]
+
+      if (keywords.addRestaurant.includes(prefix)) {
+        const customNames = terms.slice(1)
+        if (customNames.length === 0) {
+          console.error('Add Restaurant without names')
+          throw new ErrorRes('請加上餐廳名稱。\n格式：新增餐廳 <餐廳名稱>')
+        } else if (customNames.length > 5) {
+          console.error('Add too many Restaurant in one message')
+          throw new ErrorRes('一次最多新增 5 間餐廳，有需要請分成多則訊息傳送。')
+        }
+        return service.addRestaurant(replyToken, { userId, customNames })
+      } else if (keywords.removeRestaurant.includes(prefix)) {
+        return service.removeRestaurant(replyToken, { userId, text })
+      } else if (keywords.chooseRestaurant.includes(prefix)) {
+        return service.chooseRestaurant(replyToken, { userId, text })
+      } else if (keywords.exploreRestaurant.includes(prefix)) {
+        return service.exploreRestaurant(replyToken, { userId, text })
+      } else if (keywords.coChooseRestaurant.includes(prefix)) {
+        return service.coChooseRestaurant(replyToken, { userId, text })
+      } else if (keywords.setJoinCode.includes(prefix)) {
+        return service.setJoinCode(replyToken, { userId, text })
+      } else {
+        return service.echo(replyToken, { text })
+      }
     } else if (type === 'location') {
       const { latitude, longitude } = message
       const { address = `(${latitude}, ${longitude})` } = message

@@ -27,6 +27,8 @@ app.post('/callback', (req, res) => {
 // event handler
 function handleEvent (event) {
   const eventType = event.type
+  // TODO: remove later
+  console.log(event)
 
   switch (eventType) {
     case 'follow':
