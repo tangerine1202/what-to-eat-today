@@ -12,6 +12,17 @@ export default function (event) {
       const { text } = message
       const res = service.echo(replyToken, { text })
       return res
+    } else if (type === 'location') {
+      const { latitude, longitude } = message
+      const { address = `(${latitude}, ${longitude})` } = message
+
+      if (latitude > 90.0 || latitude < -90.0 || longitude > 180.0 || longitude < -180.0) {
+        console.error(`latitude or longitude out of range. Expect lat in [-90, 90] and lng in [-180, 180], but get (${latitude}, ${longitude})`)
+        throw new ErrorRes('latitude or longitude out of range.')
+      }
+
+      const res = service.updateUserLocation(replyToken, { userId, address, latitude, longitude })
+      return res
     } else {
       return Promise.resolve(null)
     }
