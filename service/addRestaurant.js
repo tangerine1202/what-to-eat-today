@@ -10,25 +10,43 @@ export default async function addRestaurant (replyToken, { userId, customNames }
   const placeIdOfUserRestaurants = user.restaurants.map((e) => e.place_id)
   const placeProcesses = []
   const namePlaceObj = {}
+  const unSeenNames = []
+  const duplicatedNames = []
+  const noResultNames = []
 
   for (const name of customNames) {
     // 1. remove duplicated user restaurants with custom name
-    if (nameOfUserRestaurants.includes(name)) continue
+    if (nameOfUserRestaurants.includes(name)) {
+      duplicatedNames.push(name)
+      continue
+    }
     // 2. fetch place information from Find Place Api
+    unSeenNames.push(name)
     placeProcesses.push(findPlace(name))
   }
 
   // 3. remove duplicated user restaurants with place_id
   const responses = await Promise.all(placeProcesses)
   for (const [idx, place] of Object.entries(responses)) {
-    if (!place || placeIdOfUserRestaurants.includes(place.place_id)) continue
-    namePlaceObj[customNames[idx]] = responses[idx]
+    if (place === null) {
+      noResultNames.push(unSeenNames[idx])
+    } else if (placeIdOfUserRestaurants.includes(place.place_id)) {
+      duplicatedNames.push(unSeenNames[idx])
+    } else {
+      namePlaceObj[unSeenNames[idx]] = responses[idx]
+    }
   }
 
   try {
     if (Object.keys(namePlaceObj).length === 0) {
-      // All added restaurants are duplicated
-      return client.replyMessage(replyToken, { type: 'text', text: '所有餐廳都已經新增過囉！' })
+      let text = '未新增任何餐廳QQ'
+      if (noResultNames.length !== 0) {
+        text = text.concat('\n\n', `以下名稱找不到餐廳，請查明後再播（？）\n- ${noResultNames.join('\n- ')}`)
+      }
+      if (duplicatedNames.length !== 0) {
+        text = text.concat('\n\n', `以下餐廳已新增過囉～\n- ${duplicatedNames.join('\n- ')}`)
+      }
+      return client.replyMessage(replyToken, { type: 'text', text })
     }
     // 4. update Restaurant
     const restaurants = await Promise.all(Object.values(namePlaceObj).map(addPlaceToRestaurant))
