@@ -1,5 +1,6 @@
 import model from '../model/index.js'
 import client from '../config/lineClient.js'
+import ErrorRes from '../lib/errorRes.js'
 
 export default async function (replyToken, { userId }) {
   // Note: coordinates format: [lng, lat]
@@ -30,6 +31,6 @@ export default async function (replyToken, { userId }) {
     return client.replyMessage(replyToken, greeting)
   } catch (err) {
     console.error(err)
-    throw new Error('Failed to add user to database')
+    throw new ErrorRes('Failed to add user to database')
   }
 }

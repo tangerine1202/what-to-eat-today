@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import config from './config.js'
+import ErrorRes from '../lib/errorRes.js'
 
 async function connectMongoDB () {
   try {
@@ -8,7 +9,7 @@ async function connectMongoDB () {
     console.log('=== MongoDB is connected ===')
   } catch (err) {
     console.error(err)
-    throw new Error('Failed to connect to the MongoDB')
+    throw new ErrorRes('Failed to connect to the MongoDB')
   }
 }
 
