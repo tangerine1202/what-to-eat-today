@@ -27,7 +27,27 @@ export default function (event) {
       } else if (keywords.removeRestaurant.includes(prefix)) {
         return service.removeRestaurant(replyToken, { userId, text })
       } else if (keywords.chooseRestaurant.includes(prefix)) {
-        return service.chooseRestaurant(replyToken, { userId, text })
+        const limit = 5
+        const offset = 0
+        // Note: distance in meters
+        let distance = 3000
+
+        // parse searching range (e.g.: "in 3000 m")
+        const maxDistance = 10000
+        const distKeywordIdx = terms.indexOf('in')
+        if (distKeywordIdx !== -1) {
+          const distIdx = distKeywordIdx + 1
+          const distUnitIdx = distKeywordIdx + 2
+
+          if (distIdx >= terms.length) throw new ErrorRes('缺少距離數字')
+          if (Number.isNaN(Number.parseFloat(terms[distIdx]))) throw new ErrorRes('距離數字無法解析')
+          if (distUnitIdx >= terms.length) throw new ErrorRes('缺少距離單位')
+          if (!['km', 'm'].includes(terms[distUnitIdx])) throw new ErrorRes('距離單位請使用 "km" 或 "m"')
+          distance = Number.parseFloat(terms[distIdx]) * ((terms[distUnitIdx] === 'km') ? 1000 : 1)
+          distance = Math.min(distance, maxDistance)
+        }
+
+        return service.chooseRestaurant(replyToken, { userId, limit, offset, distance })
       } else if (keywords.exploreRestaurant.includes(prefix)) {
         return service.exploreRestaurant(replyToken, { userId, text })
       } else if (keywords.coChooseRestaurant.includes(prefix)) {
