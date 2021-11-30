@@ -3,10 +3,11 @@ import ErrorRes from '../lib/errorRes.js'
 import client from '../config/lineClient.js'
 import { replyCarousel } from '../lib/replyHelper.js'
 
-export default async function chooseRestaurant (replyToken, { userId, limit, offset, distance }) {
+export default async function chooseRestaurant (replyToken, { userId, joinCodes, limit, offset, distance }) {
   try {
-    const user = await model.User.findOne({ user_id: userId }, ['location', 'restaurants']).lean()
-    const placeIdOfUserRestaurants = user.restaurants.map((e) => e.place_id)
+    const users = await model.User.find({ $or: [{ user_id: userId }, { join_code: joinCodes }] }, ['user_id', 'location', 'restaurants']).lean()
+    const user = users.find((e) => (e.user_id === userId))
+    const placeIdOfUsersRestaurants = users.flatMap((e) => e.restaurants.map((r) => r.place_id))
     const restaurants = await model.Restaurant.find({
       location: {
         $nearSphere: {
@@ -19,7 +20,7 @@ export default async function chooseRestaurant (replyToken, { userId, limit, off
       }
     }).lean()
     const res = restaurants
-      .filter((restaurant) => (placeIdOfUserRestaurants.includes(restaurant.place_id)))
+      .filter((restaurant) => (placeIdOfUsersRestaurants.includes(restaurant.place_id)))
       .slice(offset, offset + limit)
     if (!res || res.length === 0) {
       return client.replyMessage(replyToken, { type: 'text', text: 'Oops，附近找不到喜愛的餐廳，可以嘗試看看增大搜索範圍或「探索餐廳」！' })

@@ -5,7 +5,6 @@ import addRestaurant from './addRestaurant.js'
 import removeRestaurant from './removeRestaurant.js'
 import chooseRestaurant from './chooseRestaurant.js'
 import exploreRestaurant from './exploreRestaurant.js'
-import coChooseRestaurant from './coChooseRestaurant.js'
 import setJoinCode from './setJoinCode.js'
 
 export default {
@@ -16,6 +15,5 @@ export default {
   removeRestaurant,
   chooseRestaurant,
   exploreRestaurant,
-  coChooseRestaurant,
   setJoinCode
 }
