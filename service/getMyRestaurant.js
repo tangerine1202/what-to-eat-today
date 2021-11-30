@@ -1,7 +1,6 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import client from '../config/lineClient.js'
-import { replyCarousel } from '../lib/replyHelper.js'
+import { replyText, replyCarousel } from '../lib/replyHelper.js'
 
 export default async function getMyRestaurant (replyToken, { userId, limit, offset }) {
   try {
@@ -19,7 +18,7 @@ export default async function getMyRestaurant (replyToken, { userId, limit, offs
       }
     }).skip(offset).limit(limit).lean().exec()
     if (!restaurants || restaurants.length === 0) {
-      return client.replyMessage(replyToken, { type: 'text', text: '你尚未新增過餐廳，使用「新增餐廳」來新增第一間吧！' })
+      return replyText(replyToken, '你尚未新增過餐廳，使用「新增餐廳」來新增第一間吧！')
     }
     return replyCarousel(replyToken, restaurants)
   } catch (err) {

@@ -1,8 +1,7 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import client from '../config/lineClient.js'
 import { findPlace, getPhotoUrl } from '../lib/googleApi.js'
-import { replyCarousel } from '../lib/replyHelper.js'
+import { replyText, replyCarousel } from '../lib/replyHelper.js'
 
 export default async function addRestaurant (replyToken, { userId, customNames }) {
   const user = await model.User.findOne({ user_id: userId }).lean()
@@ -46,7 +45,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
       if (duplicatedNames.length !== 0) {
         text = text.concat('\n\n', `以下餐廳已新增過囉～\n- ${duplicatedNames.join('\n- ')}`)
       }
-      return client.replyMessage(replyToken, { type: 'text', text })
+      return replyText(replyToken, text)
     }
     // 4. update Restaurant
     const restaurants = await Promise.all(Object.values(namePlaceMapping).map(addPlaceToRestaurant))

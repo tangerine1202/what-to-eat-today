@@ -1,6 +1,6 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import client from '../config/lineClient.js'
+import { replyText } from '../lib/replyHelper.js'
 import { findPlace } from '../lib/googleApi.js'
 
 export default async function removeRestaurant (replyToken, { userId, customNames }) {
@@ -38,14 +38,14 @@ export default async function removeRestaurant (replyToken, { userId, customName
     const removedListMsg = `以下餐廳已移除成功\n- ${removedNames.join('\n- ')}`
     const unRemovedListMsg = `查無與以下名稱相符的餐廳\n- ${unRemovedNames.join('\n- ')}`
     if (newUserRestaurants.length === user.restaurants.length) {
-      return client.replyMessage(replyToken, { type: 'text', text: unRemovedListMsg })
+      return replyText(replyToken, unRemovedListMsg)
     }
     await model.User.updateOne({ user_id: userId }, { restaurants: newUserRestaurants })
     let text = removedListMsg
     if (unRemovedNames.length !== 0) {
       text = `${text}\n\n${unRemovedListMsg}`
     }
-    return client.replyMessage(replyToken, { type: 'text', text })
+    return replyText(replyToken, text)
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to add restaurant to database')

@@ -1,7 +1,6 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import client from '../config/lineClient.js'
-import { replyCarousel } from '../lib/replyHelper.js'
+import { replyText, replyCarousel } from '../lib/replyHelper.js'
 
 export default async function chooseRestaurant (replyToken, { userId, joinCodes, limit, offset, distance }) {
   try {
@@ -21,7 +20,7 @@ export default async function chooseRestaurant (replyToken, { userId, joinCodes,
       }
     }).skip(offset).limit(limit).lean().exec()
     if (!restaurants || restaurants.length === 0) {
-      return client.replyMessage(replyToken, { type: 'text', text: 'Oops，附近找不到喜愛的餐廳，可以嘗試看看增大搜索範圍或「探索餐廳」！' })
+      return replyText(replyToken, 'Oops，附近找不到喜愛的餐廳，可以嘗試看看增大搜索範圍或「探索餐廳」！')
     }
     return replyCarousel(replyToken, restaurants)
   } catch (err) {

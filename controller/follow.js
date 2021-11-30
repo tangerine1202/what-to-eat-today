@@ -1,6 +1,6 @@
-import client from '../config/lineClient.js'
 import service from '../service/index.js'
 import ErrorRes from '../lib/errorRes.js'
+import { replyText } from '../lib/replyHelper.js'
 
 export default async function (event) {
   const { replyToken, source } = event
@@ -11,9 +11,9 @@ export default async function (event) {
     return res
   } catch (err) {
     if (err instanceof ErrorRes) {
-      return client.replyMessage(replyToken, { type: 'text', text: err.message })
+      return replyText(replyToken, err.message)
     } else {
-      return client.replyMessage(replyToken, { type: 'text', text: 'Server error' })
+      return replyText(replyToken, 'Server error')
     }
   }
 }
