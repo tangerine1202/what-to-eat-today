@@ -18,17 +18,20 @@ export default async function (replyToken, { userId }) {
       coordinates: defaultCoordinates
     }
   }
-
   // TODO: change to brief introduction
-  const greeting = { type: 'text', text: `哈囉 ${displayName}，歡迎使用 What To Eat Today！\n請於左下角傳送「位置資訊」以便提供更好的搜尋結果喔！` }
+  const greeting = (name, address) => {
+    return { type: 'text', text: `哈囉 ${name}，歡迎使用 What To Eat Today！\n請於左下角傳送「位置資訊」以更新你的地理位置！\n\n目前位置：${address}` }
+  }
 
   try {
-    const hasExist = await model.User.exists({ user_id: userId })
-    if (!hasExist) {
+    const existUser = await model.User.findOne({ user_id: userId })
+    if (!existUser) {
       await model.User.create(user)
       console.log('Create user successfully')
+      return client.replyMessage(replyToken, greeting(user.name, user.address))
     }
-    return client.replyMessage(replyToken, greeting)
+
+    return client.replyMessage(replyToken, greeting(existUser.name, existUser.address))
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to add user to database')
