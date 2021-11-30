@@ -31,8 +31,16 @@ export default function (event) {
         const distance = parseDistance(terms)
         return service.exploreRestaurant(replyToken, { userId, limit, offset, distance })
       } else if (keywords.setJoinCode.includes(prefix)) {
-        // Note: cannot collide with keywords
-        return service.setJoinCode(replyToken, { userId, text })
+        const joinCode = terms[1]
+        if (!/^\w{4,24}$/.test(joinCode)) {
+          console.error(`Invalid join code, ${joinCode}`)
+          throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），長度介於 4 到 24 位之間')
+        }
+        if (getAllOperatorPrefixes().includes(joinCode)) {
+          console.error('Join code collide with command keywords')
+          throw new ErrorRes('共享號碼與指令關鍵字衝突，請設定其他共享號碼')
+        }
+        return service.setJoinCode(replyToken, { userId, joinCode })
       } else {
         return service.echo(replyToken, { text })
       }

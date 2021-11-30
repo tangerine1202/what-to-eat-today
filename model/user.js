@@ -57,7 +57,7 @@ const UserSchema = new mongoose.Schema({
 })
 
 UserSchema.index({ user_id: 1 }, { unique: true })
-UserSchema.index({ join_code: 1 })
+UserSchema.index({ join_code: 1 }, { unique: true })
 UserSchema.index({ restaurants: 1 })
 
 export default mongoose.model('User', UserSchema)
