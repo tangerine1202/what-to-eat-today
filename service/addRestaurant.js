@@ -1,7 +1,7 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
 import { findPlace, getPhotoUrl } from '../lib/googleApi.js'
-import { replyText, replyCarousel } from '../lib/replyHelper.js'
+import { replyText, replyCarousel, getViewActionGetter, getRemoveActionGetter } from '../lib/replyHelper.js'
 
 export default async function addRestaurant (replyToken, { userId, customNames }) {
   const user = await model.User.findOne({ user_id: userId }).lean()
@@ -53,7 +53,8 @@ export default async function addRestaurant (replyToken, { userId, customNames }
     const newUserRestaurants = [...user.restaurants]
     Object.entries(namePlaceMapping).map(([name, place]) => newUserRestaurants.push({ custom_name: name, place_id: place.place_id }))
     await model.User.updateOne({ user_id: userId }, { restaurants: newUserRestaurants })
-    return replyCarousel(replyToken, restaurants)
+
+    return replyCarousel(replyToken, restaurants, [getViewActionGetter(), getRemoveActionGetter()])
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to add restaurant to database')

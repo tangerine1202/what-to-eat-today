@@ -1,10 +1,10 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import { replyText, replyCarousel } from '../lib/replyHelper.js'
+import { replyText, replyCarousel, getViewActionGetter, getMoreColumn } from '../lib/replyHelper.js'
 
-export default async function chooseRestaurant (replyToken, { userId, joinCodes, limit, offset, distance }) {
+export default async function chooseRestaurant (replyToken, { userId, limit, offset, distance, joinCodes }) {
   try {
-    const users = await model.User.find({ $or: [{ user_id: userId }, { join_code: joinCodes }] }, ['user_id', 'location', 'restaurants']).lean().exec()
+    const users = await model.User.find({ $or: [{ user_id: userId }, { join_code: joinCodes }] }).lean().exec()
     const user = users.find((e) => (e.user_id === userId))
     const placeIdOfUsersRestaurants = users.flatMap((e) => e.restaurants.map((r) => r.place_id))
     const restaurants = await model.Restaurant.find({
@@ -20,9 +20,13 @@ export default async function chooseRestaurant (replyToken, { userId, joinCodes,
       }
     }).skip(offset).limit(limit).lean().exec()
     if (!restaurants || restaurants.length === 0) {
-      return replyText(replyToken, 'Oops，附近找不到喜愛的餐廳，可以嘗試看看增大搜索範圍或「探索餐廳」！')
+      if (offset === 0) {
+        return replyText(replyToken, 'Oops，附近找不到喜愛的餐廳，可以嘗試看看增大搜索範圍或「探索餐廳」！')
+      } else {
+        return replyText(replyToken, '已列出附近所有喜愛的餐廳，如果還是選不定可以嘗試看看增大搜索範圍或「探索餐廳」喔！')
+      }
     }
-    return replyCarousel(replyToken, restaurants)
+    return replyCarousel(replyToken, restaurants, [getViewActionGetter()], getMoreColumn('choose', limit, offset, distance, joinCodes))
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to get restaurants from database')

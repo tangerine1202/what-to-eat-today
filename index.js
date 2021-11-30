@@ -34,7 +34,7 @@ function handleEvent (event) {
     case 'message':
       return controller.message(event)
     case 'postback':
-      return Promise.resolve(null)
+      return controller.postback(event)
     default:
       console.log(`Unregistered event type: ${eventType}`)
       return Promise.resolve(null)
