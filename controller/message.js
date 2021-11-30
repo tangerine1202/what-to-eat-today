@@ -40,7 +40,7 @@ export default function (event) {
           const distUnitIdx = distKeywordIdx + 2
 
           if (distIdx >= terms.length) throw new ErrorRes('缺少距離數字')
-          if (Number.isNaN(Number.parseFloat(terms[distIdx]))) throw new ErrorRes('距離數字無法解析')
+          if (/^\d+\.?\d*$/.test(terms[distIdx]) && Number.isNaN(Number.parseFloat(terms[distIdx]))) throw new ErrorRes('距離數字無法解析')
           if (distUnitIdx >= terms.length) throw new ErrorRes('缺少距離單位')
           if (!['km', 'm'].includes(terms[distUnitIdx])) throw new ErrorRes('距離單位請使用 "km" 或 "m"')
           distance = Number.parseFloat(terms[distIdx]) * ((terms[distUnitIdx] === 'km') ? 1000 : 1)
