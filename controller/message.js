@@ -17,6 +17,10 @@ export default function (event) {
       if (keywords.addRestaurant.includes(prefix)) {
         const customNames = parseRestaurant(terms)
         return service.addRestaurant(replyToken, { userId, customNames })
+      } else if (keywords.getMyRestaurant.includes(prefix)) {
+        const limit = 5
+        const offset = 0
+        return service.getMyRestaurant(replyToken, { userId, limit, offset })
       } else if (keywords.removeRestaurant.includes(prefix)) {
         const customNames = parseRestaurant(terms)
         return service.removeRestaurant(replyToken, { userId, customNames })
