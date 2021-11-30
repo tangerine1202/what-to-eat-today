@@ -1,6 +1,6 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import { replyText, replyCarousel, getViewActionGetter, getMoreColumn } from '../lib/replyHelper.js'
+import { replyText, replyCarousel, getViewAction, getMoreColumn } from '../lib/replyHelper.js'
 
 export default async function exploreRestaurant (replyToken, { userId, limit, offset, distance }) {
   try {
@@ -23,7 +23,7 @@ export default async function exploreRestaurant (replyToken, { userId, limit, of
         return replyText(replyToken, 'Uh oh，已列出附近所有推薦的餐廳，相信你不會踩到雷的！')
       }
     }
-    return replyCarousel(replyToken, restaurants, [getViewActionGetter()], getMoreColumn('explore', limit, offset, distance))
+    return replyCarousel(replyToken, restaurants, [getViewAction], getMoreColumn('explore', limit, offset, distance))
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to get restaurants from database')

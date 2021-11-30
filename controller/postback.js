@@ -19,6 +19,9 @@ export default function (event) {
     } else if (keywords.exploreRestaurant.includes(command)) {
       const { limit = 5, offset = 0, distance = 3000 } = data
       return service.exploreRestaurant(replyToken, { userId, limit, offset, distance })
+    } else if (keywords.removeRestaurant.includes(command)) {
+      const { placeId } = data
+      return service.removeRestaurant(replyToken, { userId, placeIds: [placeId] })
     } else {
       return Promise.resolve(null)
     }

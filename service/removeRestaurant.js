@@ -3,7 +3,7 @@ import ErrorRes from '../lib/errorRes.js'
 import { replyText } from '../lib/replyHelper.js'
 import { findPlace } from '../lib/googleApi.js'
 
-export default async function removeRestaurant (replyToken, { userId, customNames }) {
+export default async function removeRestaurant (replyToken, { userId, customNames = [], placeIds = [] }) {
   const user = await model.User.findOne({ user_id: userId }, ['restaurants', 'location']).lean()
   const newUserRestaurants = [...user.restaurants]
   const removedNames = []
@@ -21,6 +21,15 @@ export default async function removeRestaurant (replyToken, { userId, customName
       placeProcesses.push(findPlace(name, user.location.coordinates[1], user.location.coordinates[0]))
       unSeenNames.push(name)
     }
+  }
+
+  for (const placeId of placeIds) {
+    const removedIdx = newUserRestaurants.findIndex((e) => (e.place_id === placeId))
+    if (removedIdx !== -1) {
+      removedNames.push(newUserRestaurants[removedIdx].custom_name)
+      newUserRestaurants.splice(removedIdx, 1)
+    }
+    // ignore place id that is not in user restaurants
   }
 
   const responses = (await Promise.all(placeProcesses)).filter((e) => e)
