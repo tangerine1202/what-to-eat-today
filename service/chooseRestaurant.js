@@ -26,7 +26,7 @@ export default async function chooseRestaurant (replyToken, { userId, limit, off
     }
     return replyCarousel(replyToken, res)
   } catch (err) {
-    console.log(err)
+    console.error(err)
     throw new ErrorRes('Failed to get restaurants from database')
   }
 }

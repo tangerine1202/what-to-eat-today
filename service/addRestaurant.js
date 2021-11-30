@@ -22,7 +22,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
     }
     // 2. fetch place information from Find Place Api
     unSeenNames.push(name)
-    placeProcesses.push(findPlace(name))
+    placeProcesses.push(findPlace(name, user.location.coordinates[1], user.location.coordinates[0]))
   }
 
   // 3. remove duplicated user restaurants with place_id
@@ -56,7 +56,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
     await model.User.updateOne({ user_id: userId }, { restaurants: newUserRestaurants })
     return replyCarousel(replyToken, restaurants)
   } catch (err) {
-    console.log(err)
+    console.error(err)
     throw new ErrorRes('Failed to add restaurant to database')
   }
 }
