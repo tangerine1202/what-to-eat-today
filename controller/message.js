@@ -18,7 +18,8 @@ export default function (event) {
         const customNames = parseRestaurant(terms)
         return service.addRestaurant(replyToken, { userId, customNames })
       } else if (keywords.removeRestaurant.includes(prefix)) {
-        return service.removeRestaurant(replyToken, { userId, text })
+        const customNames = parseRestaurant(terms)
+        return service.removeRestaurant(replyToken, { userId, customNames })
       } else if (keywords.chooseRestaurant.includes(prefix)) {
         const limit = 5
         const offset = 0
@@ -79,11 +80,11 @@ function parseRestaurant (terms) {
   }
 
   if (customNames.length === 0) {
-    console.error('Add Restaurant without names')
-    throw new ErrorRes('請加上餐廳名稱。\n格式：新增餐廳 <餐廳名稱>')
+    console.error('No restaurant name get prased')
+    throw new ErrorRes('請加上餐廳名稱。\n格式：指令名稱 <餐廳名稱>')
   } else if (customNames.length > 5) {
-    console.error('Add too many Restaurant in one message')
-    throw new ErrorRes('一次最多新增 5 間餐廳，有需要請分成多則訊息傳送。')
+    console.error('Too many restaurant in one message')
+    throw new ErrorRes('一次最多填入 5 間餐廳，有需要請分成多則訊息傳送。')
   }
 
   return customNames

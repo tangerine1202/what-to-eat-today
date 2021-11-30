@@ -9,7 +9,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
   const nameOfUserRestaurants = user.restaurants.map((e) => e.custom_name)
   const placeIdOfUserRestaurants = user.restaurants.map((e) => e.place_id)
   const placeProcesses = []
-  const namePlaceObj = {}
+  const namePlaceMapping = {}
   const unSeenNames = []
   const duplicatedNames = []
   const noResultNames = []
@@ -33,12 +33,12 @@ export default async function addRestaurant (replyToken, { userId, customNames }
     } else if (placeIdOfUserRestaurants.includes(place.place_id)) {
       duplicatedNames.push(unSeenNames[idx])
     } else {
-      namePlaceObj[unSeenNames[idx]] = responses[idx]
+      namePlaceMapping[unSeenNames[idx]] = responses[idx]
     }
   }
 
   try {
-    if (Object.keys(namePlaceObj).length === 0) {
+    if (Object.keys(namePlaceMapping).length === 0) {
       let text = '未新增任何餐廳QQ'
       if (noResultNames.length !== 0) {
         text = text.concat('\n\n', `以下名稱找不到餐廳，請查明後再播（？）\n- ${noResultNames.join('\n- ')}`)
@@ -49,10 +49,10 @@ export default async function addRestaurant (replyToken, { userId, customNames }
       return client.replyMessage(replyToken, { type: 'text', text })
     }
     // 4. update Restaurant
-    const restaurants = await Promise.all(Object.values(namePlaceObj).map(addPlaceToRestaurant))
+    const restaurants = await Promise.all(Object.values(namePlaceMapping).map(addPlaceToRestaurant))
     // 5. update User.restaurants
     const newUserRestaurants = [...user.restaurants]
-    Object.entries(namePlaceObj).map(([name, place]) => newUserRestaurants.push({ custom_name: name, place_id: place.place_id }))
+    Object.entries(namePlaceMapping).map(([name, place]) => newUserRestaurants.push({ custom_name: name, place_id: place.place_id }))
     await model.User.updateOne({ user_id: userId }, { restaurants: newUserRestaurants })
     return replyCarousel(replyToken, restaurants)
   } catch (err) {
