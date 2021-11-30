@@ -80,7 +80,7 @@ function parseRestaurant (terms) {
   }
 
   if (customNames.length === 0) {
-    console.error('No restaurant name get prased')
+    console.error('No restaurant name get parsed')
     throw new ErrorRes('請加上餐廳名稱。\n格式：指令名稱 <餐廳名稱>')
   } else if (customNames.length > 5) {
     console.error('Too many restaurant in one message')
