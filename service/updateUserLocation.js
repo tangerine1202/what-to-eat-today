@@ -1,6 +1,6 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import { replyText } from '../lib/replyHelper.js'
+import { replyLocation } from '../lib/replyHelper.js'
 
 export default async function (replyToken, { userId, address, latitude, longitude }) {
   const filter = { user_id: userId }
@@ -11,18 +11,11 @@ export default async function (replyToken, { userId, address, latitude, longitud
       coordinates: [longitude, latitude]
     }
   }
-  const replyMsg = {
-    type: 'location',
-    title: '所在地更新成功！',
-    address,
-    latitude,
-    longitude
-  }
 
   try {
     await model.User.updateOne(filter, params)
     console.log('Update user location successfully')
-    return replyText(replyToken, replyMsg)
+    return replyLocation(replyToken, '所在地更新成功！', address, latitude, longitude)
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to update user location')
