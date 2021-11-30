@@ -11,7 +11,7 @@ export default function (event) {
   try {
     if (type === 'text') {
       const { text } = message
-      const terms = text.trim().split(' ')
+      const terms = text.trim().split(/\s+/)
       const prefix = terms[0]
 
       if (keywords.addRestaurant.includes(prefix)) {
