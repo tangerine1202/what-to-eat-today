@@ -16,12 +16,11 @@ export default async function exploreRestaurant (replyToken, { userId, limit, of
           $maxDistance: distance
         }
       }
-    }).lean()
-    const res = restaurants.slice(offset, offset + limit)
-    if (!res || res.length === 0) {
+    }).skip(offset).limit(limit).lean().exec()
+    if (!restaurants || restaurants.length === 0) {
       return client.replyMessage(replyToken, { type: 'text', text: 'Uh oh，附近找不到推薦的餐廳，相信你不會踩到雷的！' })
     }
-    return replyCarousel(replyToken, res)
+    return replyCarousel(replyToken, restaurants)
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to get restaurants from database')
