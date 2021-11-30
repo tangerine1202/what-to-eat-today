@@ -26,7 +26,10 @@ export default function (event) {
         const joinCodes = parseJoinCodes(terms)
         return service.chooseRestaurant(replyToken, { userId, limit, offset, distance, joinCodes })
       } else if (keywords.exploreRestaurant.includes(prefix)) {
-        return service.exploreRestaurant(replyToken, { userId, text })
+        const limit = 5
+        const offset = 0
+        const distance = parseDistance(terms)
+        return service.exploreRestaurant(replyToken, { userId, limit, offset, distance })
       } else if (keywords.setJoinCode.includes(prefix)) {
         // Note: cannot collide with keywords
         return service.setJoinCode(replyToken, { userId, text })
