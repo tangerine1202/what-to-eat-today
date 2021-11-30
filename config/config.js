@@ -14,8 +14,8 @@ export default {
     apiKey: process.env.GOOGLE_API_KEY
   },
   mongo: {
+    schema: process.env.MONGO_SCHEMA,
     host: process.env.MONGO_HOST,
-    port: process.env.MONGO_PORT,
     username: process.env.MONGO_USERNAME,
     password: process.env.MONGO_PASSWORD,
     database: process.env.MONGO_DATABASE
