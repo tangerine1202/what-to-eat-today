@@ -65,7 +65,7 @@ async function addPlaceToRestaurant (place) {
   let photoUrl, photoAttribution
   if (!place.photos || place.photos.length === 0) {
     photoAttribution = 'Unsplash'
-    photoUrl = `https://picsum.photos/${Math.random}/picsum/200`
+    photoUrl = `https://picsum.photos/seed/${Math.random()}/200`
   } else {
     photoAttribution = place.photos[0].html_attributions.map((a) => a.match(/<a.*>(.*)<\/a>/)[1]).join(',')
     photoUrl = getPhotoUrl(place.photos[0].photo_reference)
