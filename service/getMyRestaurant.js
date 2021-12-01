@@ -24,7 +24,7 @@ export default async function getMyRestaurant (replyToken, { userId, limit, offs
         return replyText(replyToken, '已列出所有你新增的餐廳囉！')
       }
     }
-    return replyCarousel(replyToken, restaurants, [getRemoveAction], getMoreColumn('get', limit, offset))
+    return replyCarousel(replyToken, restaurants, [getRemoveAction()], getMoreColumn('get', limit, offset))
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to get restaurants from database')

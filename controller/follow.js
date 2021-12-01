@@ -7,8 +7,7 @@ export default async function (event) {
   const { userId } = source
 
   try {
-    const res = await service.followBot(replyToken, { userId })
-    return res
+    return service.followBot(replyToken, { userId })
   } catch (err) {
     if (err instanceof ErrorRes) {
       return replyText(replyToken, err.message)

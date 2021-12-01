@@ -1,7 +1,8 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
 import { findPlace, getPhotoUrl } from '../lib/googleApi.js'
-import { replyText, replyCarousel, getRemoveAction } from '../lib/replyHelper.js'
+import { replyText, replyCarousel, getRemoveAction, getQuickReply, getUpdateLocationAction } from '../lib/replyHelper.js'
+import { calculateLatLngDistance } from '../lib/utils.js'
 
 export default async function addRestaurant (replyToken, { userId, customNames }) {
   const user = await model.User.findOne({ user_id: userId }).lean()
@@ -12,6 +13,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
   const unSeenNames = []
   const duplicatedNames = []
   const noResultNames = []
+  let shouldUpdateLocation = false
 
   for (const name of customNames) {
     // 1. remove duplicated user restaurants with custom name
@@ -33,6 +35,14 @@ export default async function addRestaurant (replyToken, { userId, customNames }
       duplicatedNames.push(unSeenNames[idx])
     } else {
       namePlaceMapping[unSeenNames[idx]] = responses[idx]
+      if (!shouldUpdateLocation && calculateLatLngDistance(
+        user.location.coordinates[1],
+        user.location.coordinates[0],
+        place.geometry.location.lat,
+        place.geometry.location.lng
+      ) > 5000) {
+        shouldUpdateLocation = true
+      }
     }
   }
 
@@ -54,8 +64,13 @@ export default async function addRestaurant (replyToken, { userId, customNames }
     Object.entries(namePlaceMapping).map(([name, place]) => newUserRestaurants.push({ custom_name: name, place_id: place.place_id }))
     await model.User.updateOne({ user_id: userId }, { restaurants: newUserRestaurants })
 
+    let quickReply = null
+    if (shouldUpdateLocation) {
+      quickReply = getQuickReply([getUpdateLocationAction()])
+    }
+
     // TODO: handle duplicated names, at least give some feedback to let user know we have processed them
-    return replyCarousel(replyToken, restaurants, [getRemoveAction])
+    return replyCarousel(replyToken, restaurants, [getRemoveAction()], null, quickReply)
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to add restaurant to database')

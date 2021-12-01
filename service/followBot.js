@@ -1,7 +1,7 @@
 import client from '../config/lineClient.js'
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import { replyText } from '../lib/replyHelper.js'
+import { replyText, getQuickReply, getUpdateLocationAction } from '../lib/replyHelper.js'
 
 export default async function (replyToken, { userId }) {
   // Note: coordinates format: [lng, lat]
@@ -19,20 +19,20 @@ export default async function (replyToken, { userId }) {
       coordinates: defaultCoordinates
     }
   }
+
   // TODO: change to brief introduction
-  const greeting = (name, address) => {
-    return { type: 'text', text: `哈囉 ${name}，歡迎使用 What To Eat Today！\n請於左下角傳送「位置資訊」以更新你的地理位置！\n\n目前位置：${address}` }
-  }
+  const greeting = (name, address) => (`哈囉 ${name}，歡迎使用 What To Eat Today！\n請於左下角傳送「位置資訊」以更新你的所在地！\n\n目前位置：${address}`)
+  const quickReply = getQuickReply([getUpdateLocationAction('更新所在地')])
 
   try {
     const existUser = await model.User.findOne({ user_id: userId })
     if (!existUser) {
       await model.User.create(user)
       console.log('Create user successfully')
-      return replyText(replyToken, greeting(user.name, user.address))
+      return replyText(replyToken, greeting(user.name, user.address), quickReply)
     }
 
-    return replyText(replyToken, greeting(existUser.name, existUser.address))
+    return replyText(replyToken, greeting(existUser.name, existUser.address), quickReply)
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to add user to database')
