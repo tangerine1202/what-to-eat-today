@@ -22,7 +22,7 @@ export default async function chooseRestaurant (replyToken, { userId, limit, off
 
     if (!restaurants || restaurants.length === 0) {
       if (offset === 0) {
-        const quickReply = getQuickReply([updateLocationActionFactory()])
+        const quickReply = getQuickReply([updateLocationActionFactory('距離遙遠？更新所在地')])
         return replyText(replyToken, 'Oops，附近找不到喜愛的餐廳，可以嘗試看看增大搜索範圍或「探索餐廳」！', quickReply)
       } else {
         return replyText(replyToken, '已列出附近所有喜愛的餐廳，如果還是選不定可以嘗試看看增大搜索範圍或「探索餐廳」喔！')
@@ -36,7 +36,7 @@ export default async function chooseRestaurant (replyToken, { userId, limit, off
       restaurants[0].location.coordinates[1],
       restaurants[0].location.coordinates[0]
     ) > 5000) {
-      quickReply = getQuickReply([updateLocationActionFactory()])
+      quickReply = getQuickReply([updateLocationActionFactory('距離遙遠？更新所在地')])
     }
 
     return replyCarousel(replyToken, restaurants, [viewActionFactory()], getMoreColumn('choose', limit, offset, distance, joinCodes), quickReply)

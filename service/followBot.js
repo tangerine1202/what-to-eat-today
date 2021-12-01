@@ -28,7 +28,7 @@ export default async function (replyToken, { userId }) {
     '',
     `目前位置：${address}`
   ].join('\n'))
-  const quickReply = getQuickReply([updateLocationActionFactory('更新所在地')])
+  const quickReply = getQuickReply([updateLocationActionFactory()])
 
   try {
     const existUser = await model.User.findOne({ user_id: userId })

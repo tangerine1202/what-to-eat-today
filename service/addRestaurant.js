@@ -65,7 +65,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
 
     let quickReply = null
     if (shouldUpdateLocation) {
-      quickReply = getQuickReply([updateLocationActionFactory()])
+      quickReply = getQuickReply([updateLocationActionFactory('距離遙遠？更新所在地')])
     }
 
     // TODO: handle duplicated names, at least give some feedback to let user know we have processed them

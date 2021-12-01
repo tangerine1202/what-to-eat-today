@@ -1,5 +1,5 @@
 import { keywords } from '../lib/keywords.js'
-import { replyText } from '../lib/replyHelper.js'
+import { getQuickReply, replyText, updateLocationActionFactory } from '../lib/replyHelper.js'
 
 export default function (replyToken, { command = '' }) {
   const addMessage = [
@@ -85,6 +85,7 @@ export default function (replyToken, { command = '' }) {
   ].join('\n')
 
   let message = ''
+  let quickReply = null
   if (keywords.addRestaurant.includes(command)) {
     message = addMessage
   } else if (keywords.chooseRestaurant.includes(command)) {
@@ -99,8 +100,9 @@ export default function (replyToken, { command = '' }) {
     message = setCodeMessage
   } else if (keywords.updateLocation.includes(command)) {
     message = updateLocationMessage
+    quickReply = getQuickReply([updateLocationActionFactory()])
   } else {
     message = helpMessage
   }
-  return replyText(replyToken, message)
+  return replyText(replyToken, message, quickReply)
 }
