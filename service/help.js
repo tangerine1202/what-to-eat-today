@@ -9,7 +9,7 @@ export default function (replyToken, { command = '' }) {
     '格式：<新增/add> <餐廳名> [餐廳名...]',
     '',
     '注意：',
-    '- 餐廳名稱中不能有空格。',
+    '- 餐廳名稱中間不能有空格。',
     '- 一次最多新增五間餐廳。'
   ].join('\n')
   const chooseMessage = [

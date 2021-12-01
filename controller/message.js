@@ -39,7 +39,7 @@ export default function (event) {
         const joinCode = terms[1]
         if (!/^\w{4,8}$/.test(joinCode)) {
           console.error(`Invalid join code, ${joinCode}`)
-          throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），長度介於 4 到 8 位之間。')
+          throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），且長度需介於 4 到 8 位之間。')
         }
         if (getAllOperatorPrefixes().includes(joinCode)) {
           console.error('Join code collide with command keywords')
@@ -145,6 +145,10 @@ function parseJoinCodes (terms) {
   if (prefixIdx !== -1) {
     for (let i = prefixIdx + 1; i < terms.length; i++) {
       if (allOperatorPrefixes.includes(terms[i])) break
+      if (!/^\w{4,8}$/.test(terms[i])) {
+        console.error(`Choose with invalid join code, ${terms[i]}`)
+        throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），且長度需介於 4 到 8 位之間。')
+      }
       joinCodes.push(terms[i])
     }
   }
