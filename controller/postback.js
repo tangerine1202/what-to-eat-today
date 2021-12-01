@@ -26,10 +26,10 @@ export default function (event) {
       return Promise.resolve(null)
     }
   } catch (err) {
-    console.error(err)
     if (err instanceof ErrorRes) {
       return replyText(replyToken, err.message)
     } else {
+      console.error(err)
       return replyText(replyToken, 'Server error')
     }
   }
