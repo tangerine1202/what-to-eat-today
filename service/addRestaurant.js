@@ -1,5 +1,4 @@
 import model from '../model/index.js'
-import ErrorRes from '../lib/errorRes.js'
 import { findPlace, getPhotoUrl } from '../lib/googleApi.js'
 import { replyText, replyCarousel, removeActionFactory, getQuickReply, updateLocationActionFactory } from '../lib/replyHelper.js'
 import { calculateLatLngDistance } from '../lib/utils.js'
@@ -50,7 +49,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
     if (Object.keys(namePlaceMapping).length === 0) {
       let text = '未新增任何餐廳QQ'
       if (noResultNames.length !== 0) {
-        text = text.concat('\n\n', `以下名稱找不到餐廳，請查明後再播（？）\n- ${noResultNames.join('\n- ')}`)
+        text = text.concat('\n\n', `找不到以下名稱的餐廳，請查明後再播（？）\n- ${noResultNames.join('\n- ')}`)
       }
       if (duplicatedNames.length !== 0) {
         text = text.concat('\n\n', `以下餐廳已新增過囉～\n- ${duplicatedNames.join('\n- ')}`)
@@ -73,7 +72,7 @@ export default async function addRestaurant (replyToken, { userId, customNames }
     return replyCarousel(replyToken, restaurants, [removeActionFactory()], null, quickReply)
   } catch (err) {
     console.error(err)
-    throw new ErrorRes('Failed to add restaurant to database')
+    throw new Error('Failed to add restaurant to database')
   }
 }
 

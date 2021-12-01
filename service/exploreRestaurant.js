@@ -1,5 +1,4 @@
 import model from '../model/index.js'
-import ErrorRes from '../lib/errorRes.js'
 import { replyText, replyCarousel, viewActionFactory, updateLocationActionFactory, getMoreColumn, getQuickReply } from '../lib/replyHelper.js'
 import { calculateLatLngDistance } from '../lib/utils.js'
 
@@ -40,6 +39,6 @@ export default async function exploreRestaurant (replyToken, { userId, limit, of
     return replyCarousel(replyToken, restaurants, [viewActionFactory()], getMoreColumn('explore', limit, offset, distance), quickReply)
   } catch (err) {
     console.error(err)
-    throw new ErrorRes('Failed to get restaurants from database')
+    throw new Error('Failed to get restaurants from database')
   }
 }

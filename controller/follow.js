@@ -9,6 +9,7 @@ export default async function (event) {
   try {
     return service.followBot(replyToken, { userId })
   } catch (err) {
+    console.error(err)
     if (err instanceof ErrorRes) {
       return replyText(replyToken, err.message)
     } else {

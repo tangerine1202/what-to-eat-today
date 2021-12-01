@@ -39,11 +39,11 @@ export default function (event) {
         const joinCode = terms[1]
         if (!/^\w{4,24}$/.test(joinCode)) {
           console.error(`Invalid join code, ${joinCode}`)
-          throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），長度介於 4 到 24 位之間')
+          throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），長度介於 4 到 24 位之間。')
         }
         if (getAllOperatorPrefixes().includes(joinCode)) {
           console.error('Join code collide with command keywords')
-          throw new ErrorRes('共享號碼與指令關鍵字衝突，請設定其他共享號碼')
+          throw new ErrorRes('共享號碼與指令關鍵字衝突，請設定其他共享號碼。')
         }
         return service.setJoinCode(replyToken, { userId, joinCode })
       } else {
@@ -55,7 +55,7 @@ export default function (event) {
 
       if (latitude > 90.0 || latitude < -90.0 || longitude > 180.0 || longitude < -180.0) {
         console.error(`latitude or longitude out of range. Expect lat in [-90, 90] and lng in [-180, 180], but get (${latitude}, ${longitude})`)
-        throw new ErrorRes('latitude or longitude out of range.')
+        throw new ErrorRes('經度（-180 ~ 180）或緯度（-90 ~ 90）超出範圍。')
       }
 
       const res = service.updateUserLocation(replyToken, { userId, address, latitude, longitude })
@@ -64,10 +64,10 @@ export default function (event) {
       return Promise.resolve(null)
     }
   } catch (err) {
+    console.error(err)
     if (err instanceof ErrorRes) {
       return replyText(replyToken, err.message)
     } else {
-      console.error(err)
       return replyText(replyToken, 'Server error')
     }
   }
@@ -85,7 +85,7 @@ function parseRestaurant (terms) {
 
   if (customNames.length === 0) {
     console.error('No restaurant name get parsed')
-    throw new ErrorRes('請加上餐廳名稱。\n格式：指令名稱 <餐廳名稱>')
+    throw new ErrorRes('請加上餐廳名稱。\n格式：<指令> <餐廳名稱> [餐廳名稱...]')
   } else if (customNames.length > 5) {
     console.error('Too many restaurant in one message')
     throw new ErrorRes('一次最多填入 5 間餐廳，有需要請分成多則訊息傳送。')
@@ -112,10 +112,10 @@ function parseDistance (terms) {
     const distIdx = prefixIdx + 1
     const distUnitIdx = prefixIdx + 2
 
-    if (distIdx >= terms.length) throw new ErrorRes('缺少距離數字')
-    if (/^\d+\.?\d*$/.test(terms[distIdx]) && Number.isNaN(Number.parseFloat(terms[distIdx]))) throw new ErrorRes('距離數字無法解析')
-    if (distUnitIdx >= terms.length) throw new ErrorRes('缺少距離單位')
-    if (!operator.suffix.includes(terms[distUnitIdx])) throw new ErrorRes('距離單位請使用 "km" 或 "m"')
+    if (distIdx >= terms.length) throw new ErrorRes('缺少距離數字。')
+    if (/^\d+\.?\d*$/.test(terms[distIdx]) && Number.isNaN(Number.parseFloat(terms[distIdx]))) throw new ErrorRes('距離數字無法解析。')
+    if (distUnitIdx >= terms.length) throw new ErrorRes('缺少距離單位。')
+    if (!operator.suffix.includes(terms[distUnitIdx])) throw new ErrorRes('距離單位請使用 "km" 或 "m"。')
 
     distance = Number.parseFloat(terms[distIdx]) * ((terms[distUnitIdx] === 'km') ? 1000 : 1)
     distance = Math.min(distance, maxDistance)
@@ -146,7 +146,7 @@ function parseJoinCodes (terms) {
 
   if (prefixIdx !== -1 && joinCodes.length === 0) {
     console.error('Choose with others does not provide join codes')
-    throw new ErrorRes('請加上共享號碼。\n格式：共同選擇餐廳 <共享號碼1> [共享號碼...]')
+    throw new ErrorRes('請加上共享號碼。\n格式：<指令> with <共享號碼1> [共享號碼...]')
   }
 
   return joinCodes

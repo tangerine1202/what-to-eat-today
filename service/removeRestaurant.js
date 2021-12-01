@@ -1,5 +1,4 @@
 import model from '../model/index.js'
-import ErrorRes from '../lib/errorRes.js'
 import { replyText } from '../lib/replyHelper.js'
 import { findPlace } from '../lib/googleApi.js'
 
@@ -57,6 +56,6 @@ export default async function removeRestaurant (replyToken, { userId, customName
     return replyText(replyToken, text)
   } catch (err) {
     console.error(err)
-    throw new ErrorRes('Failed to add restaurant to database')
+    throw new Error('Failed to remove restaurant from database')
   }
 }

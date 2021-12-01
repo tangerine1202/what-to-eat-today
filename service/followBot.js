@@ -1,6 +1,5 @@
 import client from '../config/lineClient.js'
 import model from '../model/index.js'
-import ErrorRes from '../lib/errorRes.js'
 import { replyText, getQuickReply, updateLocationActionFactory } from '../lib/replyHelper.js'
 
 export default async function (replyToken, { userId }) {
@@ -35,6 +34,6 @@ export default async function (replyToken, { userId }) {
     return replyText(replyToken, greeting(existUser.name, existUser.address), quickReply)
   } catch (err) {
     console.error(err)
-    throw new ErrorRes('Failed to add user to database')
+    throw new Error('Failed to add user to database')
   }
 }

@@ -1,5 +1,4 @@
 import model from '../model/index.js'
-import ErrorRes from '../lib/errorRes.js'
 import { replyText } from '../lib/replyHelper.js'
 
 export default async function setJoinCode (replyToken, { userId, joinCode }) {
@@ -11,6 +10,6 @@ export default async function setJoinCode (replyToken, { userId, joinCode }) {
       return replyText(replyToken, '共享號碼與他人衝突，請換一組共享號碼')
     }
     console.error(err)
-    throw new ErrorRes('Failed to set join code to database')
+    throw new Error('Failed to update join code to database')
   }
 }

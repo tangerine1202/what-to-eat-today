@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import config from './config.js'
-import ErrorRes from '../lib/errorRes.js'
 
 async function connectMongoDB () {
   try {
@@ -26,7 +25,7 @@ async function connectMongoDB () {
     await mongoose.connect(connectionURL, { dbName: config.mongo.database, useNewUrlParser: true, useUnifiedTopology: true })
   } catch (err) {
     console.error(err)
-    throw new ErrorRes('Failed to connect to the MongoDB')
+    throw new Error('Failed to connect to the MongoDB')
   }
 }
 
