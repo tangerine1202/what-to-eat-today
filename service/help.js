@@ -9,7 +9,7 @@ export default function (replyToken, { command = '' }) {
     '格式：<新增/add> <餐廳名> [餐廳名...]',
     '',
     '注意：',
-    '- 餐廳名之間不能有空格。',
+    '- 餐廳名稱中不能有空格。',
     '- 一次最多新增五間餐廳。'
   ].join('\n')
   const chooseMessage = [
@@ -21,7 +21,10 @@ export default function (replyToken, { command = '' }) {
     '',
     'Tips：',
     '- 使用「in 3 km」來選定搜索範圍。',
-    '- 使用「with 共享號碼」一同參考朋友的餐廳名單。'
+    '- 使用「with 共享號碼」一同參考好友的餐廳名單。',
+    '',
+    '注意：',
+    '- 一次最多參考四位好友的餐廳名單。'
   ].join('\n')
   const exploreMessage = [
     '# 探索餐廳',
@@ -47,19 +50,19 @@ export default function (replyToken, { command = '' }) {
     '<移除/remove> <餐廳名> [餐廳名...]',
     '',
     '注意：',
-    '- 餐廳名之間不能有空格。',
+    '- 餐廳名稱中間不能有空格。',
     '- 一次最多移除五間餐廳。'
   ].join('\n')
   const setCodeMessage = [
     '# 設定共享號碼',
-    '設定與朋友分享餐廳名單用的共享號碼。',
+    '設定與好友分享餐廳名單用的共享號碼。',
     '',
     '格式：',
     '<設定共享號碼/setCode> <共享號碼>',
     '',
     '注意：',
     '- 僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_）。',
-    '- 長度需介於 4 到 24 位之間。'
+    '- 長度需介於 4 到 8 位之間。'
   ].join('\n')
   const updateLocationMessage = [
     '# 更新所在地',

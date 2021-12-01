@@ -37,9 +37,9 @@ export default function (event) {
         return service.exploreRestaurant(replyToken, { userId, limit, offset, distance })
       } else if (keywords.setJoinCode.includes(prefix)) {
         const joinCode = terms[1]
-        if (!/^\w{4,24}$/.test(joinCode)) {
+        if (!/^\w{4,8}$/.test(joinCode)) {
           console.error(`Invalid join code, ${joinCode}`)
-          throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），長度介於 4 到 24 位之間。')
+          throw new ErrorRes('不合法的共享號碼。僅能使用英文字母（a-zA-Z）、數字（0-9）、底線（_），長度介於 4 到 8 位之間。')
         }
         if (getAllOperatorPrefixes().includes(joinCode)) {
           console.error('Join code collide with command keywords')
@@ -152,6 +152,9 @@ function parseJoinCodes (terms) {
   if (prefixIdx !== -1 && joinCodes.length === 0) {
     console.error('Choose with others does not provide join codes')
     throw new ErrorRes('請加上共享號碼。\n格式：<設定共享號碼/setCode> with <共享號碼> [共享號碼...]')
+  } else if (prefixIdx !== -1 && joinCodes.length > 4) {
+    console.error('Choose with too many people')
+    throw new ErrorRes('一次最多同時參考 4 位好友的餐廳名單。')
   }
 
   return joinCodes
