@@ -46,6 +46,11 @@ export default function (event) {
           throw new ErrorRes('共享號碼與指令關鍵字衝突，請設定其他共享號碼。')
         }
         return service.setJoinCode(replyToken, { userId, joinCode })
+      } else if (keywords.updateLocation.includes(prefix)) {
+        return service.help(replyToken, { command: 'updateLocation' })
+      } else if (keywords.help.includes(prefix)) {
+        const command = terms[1] || ''
+        return service.help(replyToken, { command })
       } else {
         return service.echo(replyToken, { text })
       }
@@ -146,7 +151,7 @@ function parseJoinCodes (terms) {
 
   if (prefixIdx !== -1 && joinCodes.length === 0) {
     console.error('Choose with others does not provide join codes')
-    throw new ErrorRes('請加上共享號碼。\n格式：<指令> with <共享號碼1> [共享號碼...]')
+    throw new ErrorRes('請加上共享號碼。\n格式：<設定共享號碼/setCode> with <共享號碼> [共享號碼...]')
   }
 
   return joinCodes

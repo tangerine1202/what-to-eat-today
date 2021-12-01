@@ -19,8 +19,15 @@ export default async function (replyToken, { userId }) {
     }
   }
 
-  // TODO: change to brief introduction
-  const greeting = (name, address) => (`哈囉 ${name}，歡迎使用 What To Eat Today！\n請於左下角傳送「位置資訊」以更新你的所在地！\n\n目前位置：${address}`)
+  const greeting = (name, address) => ([
+    `哈囉 ${name}，歡迎使用 What To Eat Today！`,
+    '',
+    '# 使用說明',
+    '1. 請輸入「說明」或「help」查詢指令。',
+    '2. 請點選左下角「＋」並選擇「位置資訊」，以更新你目前的所在地！',
+    '',
+    `目前位置：${address}`
+  ].join('\n'))
   const quickReply = getQuickReply([updateLocationActionFactory('更新所在地')])
 
   try {
