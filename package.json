@@ -9,7 +9,7 @@
   },
   "scripts": {
     "lint": "npx standard --fix",
-    "start": "npx standard --fix && node ."
+    "start": "node ."
   },
   "dependencies": {
     "@line/bot-sdk": "^7.4.0",
