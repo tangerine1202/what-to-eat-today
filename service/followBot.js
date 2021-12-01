@@ -1,7 +1,7 @@
 import client from '../config/lineClient.js'
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
-import { replyText, getQuickReply, getUpdateLocationAction } from '../lib/replyHelper.js'
+import { replyText, getQuickReply, updateLocationActionFactory } from '../lib/replyHelper.js'
 
 export default async function (replyToken, { userId }) {
   // Note: coordinates format: [lng, lat]
@@ -22,7 +22,7 @@ export default async function (replyToken, { userId }) {
 
   // TODO: change to brief introduction
   const greeting = (name, address) => (`哈囉 ${name}，歡迎使用 What To Eat Today！\n請於左下角傳送「位置資訊」以更新你的所在地！\n\n目前位置：${address}`)
-  const quickReply = getQuickReply([getUpdateLocationAction('更新所在地')])
+  const quickReply = getQuickReply([updateLocationActionFactory('更新所在地')])
 
   try {
     const existUser = await model.User.findOne({ user_id: userId })

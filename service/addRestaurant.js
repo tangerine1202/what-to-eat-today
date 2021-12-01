@@ -1,7 +1,7 @@
 import model from '../model/index.js'
 import ErrorRes from '../lib/errorRes.js'
 import { findPlace, getPhotoUrl } from '../lib/googleApi.js'
-import { replyText, replyCarousel, getRemoveAction, getQuickReply, getUpdateLocationAction } from '../lib/replyHelper.js'
+import { replyText, replyCarousel, removeActionFactory, getQuickReply, updateLocationActionFactory } from '../lib/replyHelper.js'
 import { calculateLatLngDistance } from '../lib/utils.js'
 
 export default async function addRestaurant (replyToken, { userId, customNames }) {
@@ -66,11 +66,11 @@ export default async function addRestaurant (replyToken, { userId, customNames }
 
     let quickReply = null
     if (shouldUpdateLocation) {
-      quickReply = getQuickReply([getUpdateLocationAction()])
+      quickReply = getQuickReply([updateLocationActionFactory()])
     }
 
     // TODO: handle duplicated names, at least give some feedback to let user know we have processed them
-    return replyCarousel(replyToken, restaurants, [getRemoveAction()], null, quickReply)
+    return replyCarousel(replyToken, restaurants, [removeActionFactory()], null, quickReply)
   } catch (err) {
     console.error(err)
     throw new ErrorRes('Failed to add restaurant to database')
