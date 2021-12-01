@@ -36,7 +36,7 @@ export default async function removeRestaurant (replyToken, { userId, customName
   for (const [idx, place] of Object.entries(responses)) {
     const removedIdx = newUserRestaurants.findIndex((e) => (e.place_id === place.place_id))
     if (removedIdx !== -1) {
-      const removedName = unSeenNames[idx]
+      const removedName = `${unSeenNames[idx]}（${newUserRestaurants[removedIdx].custom_name}）`
       newUserRestaurants.splice(removedIdx, 1)
       removedNames.push(removedName)
       unRemovedNames.splice(unRemovedNames.indexOf(removedName), 1)
