@@ -33,11 +33,11 @@
 
 > *選擇餐廳 with 朋友*
 
-<img src=https://imgur.com/bsyhY50.gif width=400x />
+<img src=https://imgur.com/PTbD3Jm.gif width=400x />
 
 > *選擇餐廳 with 朋友，限定 300 m 以內的餐廳*
 
-<img src=https://imgur.com/AhlgDfw.gif width=400x />
+<img src=https://imgur.com/iNc6Unw.gif width=400x />
 
 
 ## Setup & Run
