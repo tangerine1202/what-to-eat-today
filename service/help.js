@@ -104,8 +104,13 @@ export default function (replyToken, { command = '' }) {
   } else if (keywords.updateLocation.includes(command)) {
     message = updateLocationMessage
     quickReply = getQuickReply([updateLocationActionFactory()])
+  } else if (keywords.help.includes(command)) {
+    message = helpMessage
   } else {
     message = helpMessage
+    if (command !== '') {
+      message = `未知的指令：${command}\n\n${message}`
+    }
   }
   return replyText(replyToken, message, quickReply)
 }

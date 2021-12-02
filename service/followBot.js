@@ -37,7 +37,6 @@ export default async function (replyToken, { userId }) {
       console.log('Create user successfully')
       return replyText(replyToken, greeting(user.name, user.address), quickReply)
     }
-
     return replyText(replyToken, greeting(existUser.name, existUser.address), quickReply)
   } catch (err) {
     console.error(err)

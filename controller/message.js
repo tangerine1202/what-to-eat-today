@@ -49,10 +49,11 @@ export default function (event) {
       } else if (keywords.updateLocation.includes(prefix)) {
         return service.help(replyToken, { command: 'updateLocation' })
       } else if (keywords.help.includes(prefix)) {
-        const command = terms[1] || ''
+        const command = terms[1] || 'help'
         return service.help(replyToken, { command })
       } else {
-        return service.echo(replyToken, { text })
+        const command = prefix || ''
+        return service.help(replyToken, { command })
       }
     } else if (type === 'location') {
       const { latitude, longitude } = message
