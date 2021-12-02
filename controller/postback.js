@@ -16,6 +16,9 @@ export default function (event) {
     } else if (keywords.chooseRestaurant.includes(command)) {
       const { limit = 5, offset = 0, distance = 3000, joinCodes = [] } = data
       return service.chooseRestaurant(replyToken, { userId, limit, offset, distance, joinCodes })
+    } else if (keywords.randomRestaurant.includes(command)) {
+      const { total = -1, distance = 3000, joinCodes = [] } = data
+      return service.randomRestaurant(replyToken, { userId, total, distance, joinCodes })
     } else if (keywords.exploreRestaurant.includes(command)) {
       const { limit = 5, offset = 0, distance = 3000 } = data
       return service.exploreRestaurant(replyToken, { userId, limit, offset, distance })

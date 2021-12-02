@@ -26,6 +26,20 @@ export default function (replyToken, { command = '' }) {
     '注意：',
     '- 一次最多參考四位好友的餐廳名單。'
   ].join('\n')
+  const randomMessage = [
+    '# 隨機選擇餐廳',
+    '讓 Line bot 隨機選擇一間餐廳。',
+    '',
+    '格式：',
+    '<隨機/random> [in <num> <m/km>] [with <共享號碼> [共享號碼...]]',
+    '',
+    'Tips：',
+    '- 使用「in 3 km」來選定搜索範圍。',
+    '- 使用「with 共享號碼」一同參考好友的餐廳名單。',
+    '',
+    '注意：',
+    '- 一次最多參考四位好友的餐廳名單。'
+  ].join('\n')
   const exploreMessage = [
     '# 探索餐廳',
     '探索附近別人都吃些什麼。',
@@ -78,6 +92,7 @@ export default function (replyToken, { command = '' }) {
     '目前支援的指令：',
     ['- 新增, add',
       '選擇, choose',
+      '隨機', 'random',
       '探索, explore',
       '我的餐廳, get',
       '移除, remove',
@@ -93,6 +108,8 @@ export default function (replyToken, { command = '' }) {
     message = addMessage
   } else if (keywords.chooseRestaurant.includes(command)) {
     message = chooseMessage
+  } else if (keywords.randomRestaurant.includes(command)) {
+    message = randomMessage
   } else if (keywords.exploreRestaurant.includes(command)) {
     message = exploreMessage
   } else if (keywords.getMyRestaurant.includes(command)) {

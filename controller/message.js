@@ -30,6 +30,11 @@ export default function (event) {
         const distance = parseDistance(terms)
         const joinCodes = parseJoinCodes(terms)
         return service.chooseRestaurant(replyToken, { userId, limit, offset, distance, joinCodes })
+      } else if (keywords.randomRestaurant.includes(prefix)) {
+        const total = -1
+        const distance = parseDistance(terms)
+        const joinCodes = parseJoinCodes(terms)
+        return service.randomRestaurant(replyToken, { userId, total, distance, joinCodes })
       } else if (keywords.exploreRestaurant.includes(prefix)) {
         const limit = 5
         const offset = 0

@@ -6,6 +6,7 @@ import addRestaurant from './addRestaurant.js'
 import getMyRestaurant from './getMyRestaurant.js'
 import removeRestaurant from './removeRestaurant.js'
 import chooseRestaurant from './chooseRestaurant.js'
+import randomRestaurant from './randomRestaurant.js'
 import exploreRestaurant from './exploreRestaurant.js'
 import setJoinCode from './setJoinCode.js'
 
@@ -18,6 +19,7 @@ export default {
   getMyRestaurant,
   removeRestaurant,
   chooseRestaurant,
+  randomRestaurant,
   exploreRestaurant,
   setJoinCode
 }
