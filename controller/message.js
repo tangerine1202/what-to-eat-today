@@ -2,8 +2,9 @@ import service from '../service/index.js'
 import ErrorRes from '../lib/errorRes.js'
 import { replyText } from '../lib/replyHelper.js'
 import { keywords, getAllOperatorPrefixes } from '../lib/keywords.js'
+import checkJoinCodesExist from '../service/checkJoinCodesExist.js'
 
-export default function (event) {
+export default async function (event) {
   const { message, source, replyToken } = event
   const { userId } = source
   const { type } = message
@@ -29,11 +30,23 @@ export default function (event) {
         const offset = 0
         const distance = parseDistance(terms)
         const joinCodes = parseJoinCodes(terms)
+        if (joinCodes.length !== 0) {
+          const { ok, notExistCodes } = await checkJoinCodesExist(joinCodes)
+          if (!ok) {
+            throw new ErrorRes(`以下共享號碼不存在：\n- ${notExistCodes.join('\n- ')}`)
+          }
+        }
         return service.chooseRestaurant(replyToken, { userId, limit, offset, distance, joinCodes })
       } else if (keywords.randomRestaurant.includes(command)) {
         const total = -1
         const distance = parseDistance(terms)
         const joinCodes = parseJoinCodes(terms)
+        if (joinCodes.length !== 0) {
+          const { ok, notExistCodes } = await checkJoinCodesExist(joinCodes)
+          if (!ok) {
+            throw new ErrorRes(`以下共享號碼不存在：\n- ${notExistCodes.join('\n- ')}`)
+          }
+        }
         return service.randomRestaurant(replyToken, { userId, total, distance, joinCodes })
       } else if (keywords.exploreRestaurant.includes(command)) {
         const limit = 5

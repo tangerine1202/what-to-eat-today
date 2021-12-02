@@ -9,6 +9,7 @@ import chooseRestaurant from './chooseRestaurant.js'
 import randomRestaurant from './randomRestaurant.js'
 import exploreRestaurant from './exploreRestaurant.js'
 import setJoinCode from './setJoinCode.js'
+import checkJoinCodesExist from './checkJoinCodesExist.js'
 
 export default {
   help,
@@ -21,5 +22,6 @@ export default {
   chooseRestaurant,
   randomRestaurant,
   exploreRestaurant,
-  setJoinCode
+  setJoinCode,
+  checkJoinCodesExist
 }

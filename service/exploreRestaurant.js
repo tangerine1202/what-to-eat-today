@@ -4,7 +4,7 @@ import { calculateLatLngDistance } from '../lib/utils.js'
 
 export default async function exploreRestaurant (replyToken, { userId, limit, offset, distance }) {
   try {
-    const user = await model.User.findOne({ user_id: userId }).lean()
+    const user = await model.User.findOne({ user_id: userId }).lean().exec()
     const restaurants = await model.Restaurant.find({
       location: {
         $nearSphere: {

@@ -3,7 +3,7 @@ import { replyText, replyCarousel, removeActionFactory, getMoreColumn } from '..
 
 export default async function getMyRestaurant (replyToken, { userId, limit, offset }) {
   try {
-    const user = await model.User.findOne({ user_id: userId }).lean()
+    const user = await model.User.findOne({ user_id: userId }).lean().exec()
     const placeIdOfUsersRestaurants = user.restaurants.map((e) => e.place_id)
     const restaurants = await model.Restaurant.find({
       place_id: placeIdOfUsersRestaurants,
