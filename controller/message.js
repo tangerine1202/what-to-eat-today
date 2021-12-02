@@ -12,35 +12,35 @@ export default function (event) {
     if (type === 'text') {
       const { text } = message
       const terms = text.trim().split(/\s+/)
-      const prefix = terms[0]
+      const command = terms[0]
 
-      if (keywords.addRestaurant.includes(prefix)) {
+      if (keywords.addRestaurant.includes(command)) {
         const customNames = parseRestaurant(terms)
         return service.addRestaurant(replyToken, { userId, customNames })
-      } else if (keywords.getMyRestaurant.includes(prefix)) {
+      } else if (keywords.getMyRestaurant.includes(command)) {
         const limit = 5
         const offset = 0
         return service.getMyRestaurant(replyToken, { userId, limit, offset })
-      } else if (keywords.removeRestaurant.includes(prefix)) {
+      } else if (keywords.removeRestaurant.includes(command)) {
         const customNames = parseRestaurant(terms)
         return service.removeRestaurant(replyToken, { userId, customNames })
-      } else if (keywords.chooseRestaurant.includes(prefix)) {
+      } else if (keywords.chooseRestaurant.includes(command)) {
         const limit = 5
         const offset = 0
         const distance = parseDistance(terms)
         const joinCodes = parseJoinCodes(terms)
         return service.chooseRestaurant(replyToken, { userId, limit, offset, distance, joinCodes })
-      } else if (keywords.randomRestaurant.includes(prefix)) {
+      } else if (keywords.randomRestaurant.includes(command)) {
         const total = -1
         const distance = parseDistance(terms)
         const joinCodes = parseJoinCodes(terms)
         return service.randomRestaurant(replyToken, { userId, total, distance, joinCodes })
-      } else if (keywords.exploreRestaurant.includes(prefix)) {
+      } else if (keywords.exploreRestaurant.includes(command)) {
         const limit = 5
         const offset = 0
         const distance = parseDistance(terms)
         return service.exploreRestaurant(replyToken, { userId, limit, offset, distance })
-      } else if (keywords.setJoinCode.includes(prefix)) {
+      } else if (keywords.setJoinCode.includes(command)) {
         const joinCode = terms[1]
         if (!/^\w{4,8}$/.test(joinCode)) {
           console.error(`Invalid join code, ${joinCode}`)
@@ -51,14 +51,14 @@ export default function (event) {
           throw new ErrorRes('共享號碼與指令關鍵字衝突，請設定其他共享號碼。')
         }
         return service.setJoinCode(replyToken, { userId, joinCode })
-      } else if (keywords.updateLocation.includes(prefix)) {
+      } else if (keywords.updateLocation.includes(command)) {
         return service.help(replyToken, { command: 'updateLocation' })
-      } else if (keywords.help.includes(prefix)) {
-        const command = terms[1] || 'help'
-        return service.help(replyToken, { command })
+      } else if (keywords.help.includes(command)) {
+        const searchedCommand = terms[1] || 'help'
+        return service.help(replyToken, { command: searchedCommand })
       } else {
-        const command = prefix || ''
-        return service.help(replyToken, { command })
+        const searchedCommand = command || ''
+        return service.help(replyToken, { command: searchedCommand })
       }
     } else if (type === 'location') {
       const { latitude, longitude } = message
