@@ -46,6 +46,10 @@ export default async function removeRestaurant (replyToken, { userId, customName
     const removedListMsg = `以下餐廳已移除成功\n- ${removedNames.join('\n- ')}`
     const unRemovedListMsg = `查無與以下名稱相符的餐廳\n- ${unRemovedNames.join('\n- ')}`
     if (newUserRestaurants.length === user.restaurants.length) {
+      if (unRemovedNames.length === 0) {
+        // Special case: postback remove again, but restaurant already been removed
+        return Promise.resolve()
+      }
       return replyText(replyToken, unRemovedListMsg)
     }
     await model.User.updateOne({ user_id: userId }, { restaurants: newUserRestaurants })
