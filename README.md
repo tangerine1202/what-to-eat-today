@@ -31,11 +31,13 @@
 
 <img src=https://i.imgur.com/gDchgC1.jpg width=400x />
 
-> *選擇餐廳（with 朋友，限定 300 m 以內的餐廳）*
+> *選擇餐廳 with 朋友*
 
+<img src=https://s10.gifyu.com/images/cw.gif width=400x />
 
-<img src=https://s10.gifyu.com/images/ezgif.com-gif-maker4513129be5e949f0.gif width=400x />
+> *選擇餐廳 with 朋友，限定 300 m 以內的餐廳*
 
+<img src=https://s10.gifyu.com/images/cwi.gif width=400x />
 
 ## Setup & Run
 
@@ -45,14 +47,13 @@
 3. 依照 `.env.example` 設定環境變數，並放入 `.env` 中。
 
 ```shell
-git clone https://github.com/tangerine1202/what-to-eat-today
+git clone https://github.com/tangerine1202/what-to-eat-today.git
 cd what-to-eat-today
 docker compose up
 npm install
 npm start
 ```
 
-- [ ] update repo link
 
 ### Heroku
 
@@ -175,7 +176,7 @@ Tip：
 ```
 
 <img src=https://i.imgur.com/Lx6PBTg.jpg width=300x />
-
+<br/>
 <img src=https://i.imgur.com/X1KMYTR.jpg width=300x />
-
+<br/>
 <img src=https://i.imgur.com/vNM0L8t.jpg width=300x />
