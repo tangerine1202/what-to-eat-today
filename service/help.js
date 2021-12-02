@@ -92,7 +92,7 @@ export default function (replyToken, { command = '' }) {
     '目前支援的指令：',
     ['- 新增, add',
       '選擇, choose',
-      '隨機', 'random',
+      '隨機, random',
       '探索, explore',
       '我的餐廳, get',
       '移除, remove',
