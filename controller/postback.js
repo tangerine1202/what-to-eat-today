@@ -25,6 +25,11 @@ export default function (event) {
     } else if (keywords.removeRestaurant.includes(command)) {
       const { placeId } = data
       return service.removeRestaurant(replyToken, { userId, placeIds: [placeId] })
+    } else if (keywords.updateLocation.includes(command)) {
+      return service.help(replyToken, { command: 'updateLocation' })
+    } else if (keywords.help.includes(command)) {
+      const { searchedCommand = 'help' } = data
+      return service.help(replyToken, { command: searchedCommand })
     } else {
       return Promise.resolve(null)
     }

@@ -2,5 +2,8 @@
 
 node_modules/
 
+static/*
+!static/*.jpg
+
 .env*
 !.env.example
