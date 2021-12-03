@@ -1,5 +1,4 @@
 import model from '../model/index.js'
-import ErrorRes from '../lib/errorRes.js'
 import { replyText } from '../lib/replyHelper.js'
 
 export default async function setJoinCode (replyToken, { userId, joinCode }) {
@@ -9,7 +8,7 @@ export default async function setJoinCode (replyToken, { userId, joinCode }) {
   } catch (err) {
     if (err.name === 'MongoServerError' && err.code === 11000) {
       console.log('Join code collides with others')
-      throw new ErrorRes('共享號碼與他人衝突，請換一組共享號碼')
+      return replyText(replyToken, '共享號碼與他人衝突，請換一組共享號碼')
     }
     console.error(err)
     throw new Error('Failed to update join code to database')
